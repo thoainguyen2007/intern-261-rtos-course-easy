@@ -5,11 +5,11 @@
 ## 1. Số đo
 | Đại lượng | Giá trị |
 |---|---|
-| `BLINK_PERIOD_MS` (từ params.h) | |
-| Chu kỳ đo được — min | |
-| Chu kỳ đo được — max | |
-| Chu kỳ đo được — trung bình | |
-| Sai số trung bình vs `BLINK_PERIOD_MS` | |
+| `BLINK_PERIOD_MS` (từ params.h) | 127 |
+| Chu kỳ đo được — min | 126|
+| Chu kỳ đo được — max | 126|
+| Chu kỳ đo được — trung bình | 126|
+| Sai số trung bình vs `BLINK_PERIOD_MS` | 1|
 | `uxTaskGetStackHighWaterMark()` của bringup_task | words |
 
 Ảnh PulseView (>= 10 chu kỳ, đọc được giá trị): `![](do_ex1.png)`
