@@ -5,12 +5,12 @@
 ## 1. Bảng thống kê (tính từ CSV, không đọc tay)
 | # | Delay | Tick | min (ms) | max (ms) | tb (ms) | jitter = max−min (us) | drift tổng (ms) |
 |---|---|---|---|---|---|---|---|
-| 1 | `vTaskDelay` | 1000 | | | | | |
-| 2 | `xTaskDelayUntil` | 1000 | | | | | |
-| 3 | `vTaskDelay` | 100 | | | | | |
-| 4 | `xTaskDelayUntil` | 100 | | | | | |
+| 1 | `vTaskDelay` | 1000 |18.9980 |19.0010 |18.9991 |3.00 |-0.89 |
+| 2 | `xTaskDelayUntil` | 1000 |18.9980 |19.0010 |18.9991 |3.00 |-0.90 |
+| 3 | `vTaskDelay` | 100 |9.9980 | 9.10.0010|9.9995 |3.00 |-9000.47 |
+| 4 | `xTaskDelayUntil` | 100 |9.9980 |10.0010 |9.9995 |3.00 |-9000.47 |
 
-- Script dùng để tính: `______`
+- Script dùng để tính: `analyse.py`
 - CSV gốc: `______` (commit kèm)
 - Ảnh: `![](ex3_cfg1.png)` `![](ex3_cfg2.png)` `![](ex3_cfg3.png)` `![](ex3_cfg4.png)`
 
