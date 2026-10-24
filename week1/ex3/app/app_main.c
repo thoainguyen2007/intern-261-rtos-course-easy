@@ -15,6 +15,7 @@ void app_main(void)
     /* TODO: create periodic_task. Its priority must be the highest in the system
      *       — justify why in REPORT.md, and say what the measurement would look
      *       like if it were not. */
+    xTaskCreate(periodic_task, "task", 128, NULL, configMAX_PRIORITIES-1, NULL);
 
     vTaskStartScheduler();
 
