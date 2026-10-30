@@ -13,6 +13,8 @@
 #include "params.h"
 #include "pipeline.h"
 
+extern UART_HandleTypeDef huart1;
+
 void uart_task(void *argument)
 {
     (void)argument;
@@ -21,11 +23,33 @@ void uart_task(void *argument)
         filtered_sample_t in;
 
         /* TODO 1: xQueueReceive(queue_filtered, &in, portMAX_DELAY). */
+        xQueueReceive(queue_filtered, &in, portMAX_DELAY);
+
 
         /* TODO 2: format "seq,ax,ay,az\r\n" and HAL_UART_Transmit on USART1.
          *         Transmit time at UART_BAUD is the thing that makes this
          *         task slow relative to sensor_task/filter_task — say so in
          *         REPORT.md with the actual byte time you computed. */
-        (void)in;
+        char buffer[64];
+
+        int len = snprintf(
+            buffer,
+            sizeof(buffer),
+            "%lu,%d,%d,%d\r\n",
+            (unsigned long)in.seq,
+            (int)in.ax,
+            (int)in.ay,
+            (int)in.az
+        );
+
+        if (len > 0 && len < (int)sizeof(buffer))
+        {
+            HAL_UART_Transmit(
+                &huart1,
+                (uint8_t *)buffer,
+                (uint16_t)len,
+                HAL_MAX_DELAY
+            );
+        }
     }
 }

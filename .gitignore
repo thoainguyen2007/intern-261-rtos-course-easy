@@ -25,3 +25,7 @@ CMakeUserPresets.json
 
 # LibreOffice lock files
 .~lock.*#
+/week1/ex3/data1.csv
+/week1/ex3/data2.csv
+/week1/ex3/data3.csv
+/week1/ex3/data4.csv
