@@ -38,3 +38,13 @@ Lệch dự đoán
 Với `SAMPLE_PERIOD_MS` của **bạn**, nếu `FILTER_WINDOW` tăng gấp đôi thì độ trễ
 từ cảm biến đến UART tăng thêm bao nhiêu ms? Trả lời bằng số từ dữ liệu của bạn,
 rồi đo lại để kiểm chứng.
+
+
+Với SAMPLE_PERIOD_MS = 10 ms, tăng FILTER_WINDOW từ 16 lên 32 làm tăng thêm 16 kỳ lấy mẫu, tương đương 160 ms để tích lũy đủ cửa sổ trước khi xuất kết quả đầu tiên, nếu giữ chính sách chờ cửa sổ đầy như trong code hiện tại.
+
+Kết quả đo:
+FILTER_WINDOW=32, FIRST_SEQ=31, FIRST_UART_MS=314
+FILTER_WINDOW=16, FIRST_SEQ=15, FIRST_UART_MS=154
+
+Như vậy 314-154=160, đúng theo lý thuyết độ trễ cần chờ thêm khi tăng FILTER_WINDOW từ 16 lên 32.
+
