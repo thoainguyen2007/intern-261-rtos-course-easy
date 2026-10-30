@@ -73,7 +73,9 @@ void filter_task(void *argument)
         /* TODO 5: xQueueSend(queue_filtered, &out, <timeout>) — same question
          *         as sensor_task: what should happen here if uart_task is
          *         slow and queue_filtered is full? */
-        xQueueSend(queue_filtered, &out, portMAX_DELAY);
+        xQueueSend(queue_filtered, &out, 0);
+        // xQueueSend(queue_filtered, &out, pdMS_TO_TICKS);
+        // xQueueSend(queue_filtered, &out, portMAX_DELAY);
         
     }
 }
