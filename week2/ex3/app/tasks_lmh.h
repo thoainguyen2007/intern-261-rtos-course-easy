@@ -8,6 +8,7 @@
 #endif
 
 void resource_init(void);
+void dwt_init();
 
 void task_low(void *argument);
 void task_mid(void *argument);
