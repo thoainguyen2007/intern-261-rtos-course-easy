@@ -14,12 +14,19 @@ void exti_button_init(void)
 {
     /* TODO 1: GPIO init for PB<EXTI_PIN> as EXTI falling edge (GPIO_MODE_IT_FALLING,
      *         pull-up), and PA<ACK_PIN> as push-pull output.
-     *
+     
      * TODO 2 (do this FIRST, on purpose): HAL_NVIC_SetPriority(EXTIx_IRQn, <n>, 0)
      *         with <n> deliberately SMALLER (= higher hardware priority) than
      *         configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. Run step 4 of the
      *         README with this wrong value first and capture the configASSERT.
      *         Only after that, set it to ISR_NVIC_PRIO and HAL_NVIC_EnableIRQ. */
+    // HAL_NVIC_SetPriority(EXTI1_IRQn, 4, 0);
+    // HAL_NVIC_SetPriority(EXTI1_IRQn, ISR_NVIC_PRIO, 0);
+    HAL_NVIC_SetPriority(EXTI1_IRQn, 9, 0);
+
+    HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+
 }
 
 void exti_button_isr_handler(void)
@@ -31,6 +38,19 @@ void exti_button_isr_handler(void)
      * TODO 4: portYIELD_FROM_ISR(xHigherPriorityTaskWoken) -- the README asks
      *         you to temporarily remove exactly this line in step 6 to measure
      *         the latency penalty. Do NOT remove it in the version you submit. */
+    if (s_ack_task_handle != NULL)
+    {
+        // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+        
+        vTaskNotifyGiveFromISR(
+            s_ack_task_handle,
+            &xHigherPriorityTaskWoken
+        );
+        // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
+
     (void)xHigherPriorityTaskWoken;
 }
 
@@ -41,8 +61,20 @@ void ack_task(void *argument)
 
     for (;;) {
         /* TODO 5: ulTaskNotifyTake(pdTRUE, portMAX_DELAY). */
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         /* TODO 6: toggle PA<ACK_PIN> here, nothing before it in this loop body --
          *         any extra work here inflates the latency you are measuring. */
+        HAL_GPIO_TogglePin(GPIOA, (1U << ACK_PIN));
+
+    }
+}
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == GPIO_PIN_1)
+    {
+        exti_button_isr_handler();
     }
 }

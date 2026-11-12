@@ -17,6 +17,10 @@ void app_main(void)
      *       scheduling jitter from something else. Justify the number in
      *       REPORT.md. */
 
+    xTaskCreate(ack_task, "ack_task", 128, NULL, 4, NULL);//ko liên quan tới mấy cái priority của NVIC, đặt 4 là do configMAX_PRIORITIES=5 nên có 5 mức priority cho các task(chọn con số từ 0-4 là đc)
+
+   
+
     vTaskStartScheduler();
 
     for (;;) {

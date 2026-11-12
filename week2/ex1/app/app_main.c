@@ -15,11 +15,6 @@ QueueHandle_t queue_raw;
 QueueHandle_t queue_filtered;
 
 
-
-
-
-
-
 #include <stdio.h>
 
 extern UART_HandleTypeDef huart1;
@@ -71,7 +66,7 @@ void depth_logger_task(void *argument)
 
     char line[48];
     const char header[] =
-        "\r\nCSV_BEGIN\r\n"
+        "\r\nBEGIN\r\n"
         "time_ms,raw_depth,filtered_depth\r\n";
 
     HAL_UART_Transmit(
@@ -97,7 +92,7 @@ void depth_logger_task(void *argument)
         }
     }
 
-    const char footer[] = "CSV_END\r\n";
+    const char footer[] = "END\r\n";
 
     HAL_UART_Transmit(
         &huart1, (uint8_t *)footer,
