@@ -14,6 +14,8 @@ void app_main(void)
      *       (GPIO_MODE_IT_RISING_FALLING) -- you need every bounce edge, not
      *       just the first one. */
 
+    
+
     debounce_init();
 
     vTaskStartScheduler();
