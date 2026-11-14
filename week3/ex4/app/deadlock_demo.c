@@ -17,6 +17,9 @@
 static SemaphoreHandle_t s_mutex_a;
 static SemaphoreHandle_t s_mutex_b;
 
+volatile uint32_t alpha_wait_ms = 0;
+volatile uint32_t beta_wait_ms = 0;
+
 void deadlock_demo_init(void)
 {
     s_mutex_a = xSemaphoreCreateMutex();
@@ -25,6 +28,17 @@ void deadlock_demo_init(void)
     configASSERT(s_mutex_b != NULL);
 }
 
+TaskHandle_t deadlock_mutex_holder_a(void)
+{
+    return xSemaphoreGetMutexHolder(s_mutex_a);
+}
+
+TaskHandle_t deadlock_mutex_holder_b(void)
+{
+    return xSemaphoreGetMutexHolder(s_mutex_b);
+}
+
+
 void task_alpha(void *argument)
 {
     (void)argument;
@@ -32,6 +46,10 @@ void task_alpha(void *argument)
     for (;;) {
         xSemaphoreTake(s_mutex_a, portMAX_DELAY);
         vTaskDelay(pdMS_TO_TICKS(5)); /* simulated register access time */
+
+        alpha_wait_ms = HAL_GetTick();
+        xSemaphoreTake(s_mutex_b, portMAX_DELAY);
+
         xSemaphoreTake(s_mutex_b, portMAX_DELAY);
 
         /* ... shared work using both resources ... */
@@ -45,6 +63,9 @@ void task_alpha(void *argument)
          *       "this task completed a full cycle", not just "this task is
          *       still being scheduled". */
 
+        supervisor_checkin(SUPERVISOR_BIT_ALPHA);
+        
+
         vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
@@ -56,6 +77,9 @@ void task_beta(void *argument)
     for (;;) {
         xSemaphoreTake(s_mutex_b, portMAX_DELAY);
         vTaskDelay(pdMS_TO_TICKS(5)); /* simulated UART buffer access time */
+        beta_wait_ms = HAL_GetTick();
+        xSemaphoreTake(s_mutex_a, portMAX_DELAY);
+        
         xSemaphoreTake(s_mutex_a, portMAX_DELAY);
 
         /* ... shared work using both resources ... */
@@ -66,6 +90,7 @@ void task_beta(void *argument)
         /* TODO (step 4 of README, after the deadlock is fixed): call
          *       supervisor_checkin(SUPERVISOR_BIT_BETA) here, AFTER both
          *       mutexes are released. */
+        supervisor_checkin(SUPERVISOR_BIT_BETA);
 
         vTaskDelay(pdMS_TO_TICKS(20));
     }
