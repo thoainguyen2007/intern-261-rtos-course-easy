@@ -29,6 +29,7 @@ Lệnh T: Gửi T0\r làm demo_task bị suspend, LED dừng nhấp nháy. Gửi
 
 Nếu có mất byte: giải thích bằng cơ chế (stream buffer đầy, parser bị trễ,
 hay nguyên nhân khác) — không chỉ nói "bị mất".
+Mất do stream buffer bị đầy do parser ko xử lý kịp so với tốc độ gửi byte của uart.
 
 ## 4. Vì sao stream buffer, không phải queue
 Stream Buffer phù hợp vì UART nhận dữ liệu liên tục từng byte và các lệnh có độ dài khác nhau. ISR đưa byte vào buffer, còn parser_task đọc và ghép thành lệnh khi gặp \r.
@@ -41,3 +42,5 @@ Mỗi mục lệch + nguyên nhân.
 ## 6. Câu hỏi đánh đổi
 Với `RX_BAUD` của bạn, nếu tăng gấp đôi `STREAM_BUFFER_BYTES`, tốc độ gửi tối
 đa không mất byte tăng thêm bao nhiêu (đo thật, không suy luận)?
+
+Tăng buffer giúp giảm mất dữ liệu khi parser bị trễ. Tuy nhiên, tốc độ truyền vật lý vẫn là 57600 baud, tương đương tối đa 5760 byte/s với UART 8N1.
