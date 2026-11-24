@@ -50,7 +50,6 @@ void task_alpha(void *argument)
         alpha_wait_ms = HAL_GetTick();
         xSemaphoreTake(s_mutex_b, portMAX_DELAY);
 
-        xSemaphoreTake(s_mutex_b, portMAX_DELAY);
 
         /* ... shared work using both resources ... */
 
@@ -79,8 +78,7 @@ void task_beta(void *argument)
         vTaskDelay(pdMS_TO_TICKS(5)); /* simulated UART buffer access time */
         beta_wait_ms = HAL_GetTick();
         xSemaphoreTake(s_mutex_a, portMAX_DELAY);
-        
-        xSemaphoreTake(s_mutex_a, portMAX_DELAY);
+
 
         /* ... shared work using both resources ... */
 
